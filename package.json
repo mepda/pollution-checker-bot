@@ -1,0 +1,22 @@
+{
+  "name": "30-pollution-slackbot",
+  "version": "1.0.0",
+  "description": "A Slackbot that fetches pollution levels of a city",
+  "main": "index.js",
+  "scripts": {
+    "start": "source config/app-env && node index.js"
+  },
+  "keywords": [
+    "Slackbot",
+    "pollution"
+  ],
+  "author": "Ben Sadick",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "slackbots": "^1.1.0"
+  }
+}
