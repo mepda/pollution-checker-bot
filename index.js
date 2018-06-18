@@ -28,10 +28,16 @@ bot.on("error", error => {
 //debugged, checked that the data.bot_id doesn't cause the bot to infinitely call itself
 bot.on("message", data => {
   if (data.text) {
-    //have to check if the bot is mentioned, otherwise it responds to any message input
-    if (!data.text.split(" ").includes("<@UB8ADBS21>")) {
-      return;
-    }
+    let botName;
+    bot.getUserId("pollutionbot").then(data => {
+      botName = data;
+      //have to check if the bot is mentioned, otherwise it responds to any message input
+      //additionally must check the bots name (may vary on different channels)
+      if (!data.text.split(" ").includes("@" + botName)) {
+        return;
+      }
+    });
+
     //ensure that the city is at least 3 characters long
     if (data.text.split(" ")[1].length <= 2) {
       return;
