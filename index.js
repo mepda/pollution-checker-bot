@@ -36,12 +36,11 @@ bot.on("message", data => {
       if (!data.text.split(" ").includes("@" + botName)) {
         return;
       }
+      //ensure that the city is at least 3 characters long
+      if (data.text.split(" ")[1].length <= 2) {
+        return;
+      }
     });
-
-    //ensure that the city is at least 3 characters long
-    if (data.text.split(" ")[1].length <= 2) {
-      return;
-    }
   }
   //make sure we're getting a message and it's not from our bot
   if (data.type !== "message" || data.bot_id == "BB97K7P3R") {
