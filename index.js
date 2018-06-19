@@ -13,7 +13,7 @@ bot.on('start', () => {
   };
 
   bot.postMessageToChannel(
-    'community-chat',
+    'botplayground',
     'Check the pollution level of a city with @pollutionbot city',
     params
   );
@@ -40,7 +40,8 @@ bot.on('message', data => {
       botName = data;
       //have to check if the bot is mentioned, otherwise it responds to any message input
       //additionally must check the bots name (may vary on different channels)
-      if (data.text.split(' ').includes('@' + botName)) {
+      //if a message DOESNT include the @pollution bot, then return
+      if (!data.text.split(' ').includes('@' + botName)) {
         return;
       }
       //ensure that the city is at least 3 characters long
@@ -64,7 +65,7 @@ function handleMessage(data) {
       icon_emoji: ':earth_asia:'
     };
     bot.postMessageToChannel(
-      'community-chat',
+      'botplayground',
       `You can find pollution levels of various cities by typing @pollutionbot cityname (i.e. @pollutionbot worcester)
 Note that I might take some time occasionally if there are many requests`,
       params
@@ -89,7 +90,7 @@ function handleAqi(aqi) {
       icon_emoji: ':question:'
     };
     bot.postMessageToChannel(
-      'community-chat',
+      'botplayground',
       "I think there was a mistake. Couldn't find anything about " + city,
       params
     );
@@ -98,7 +99,7 @@ function handleAqi(aqi) {
       icon_emoji: ':smile_cat:'
     };
     bot.postMessageToChannel(
-      'community-chat',
+      'botplayground',
       'Easy breathing, the aqi is: ' + aqi,
       params
     );
@@ -107,7 +108,7 @@ function handleAqi(aqi) {
       icon_emoji: ':smiley_cat:'
     };
     bot.postMessageToChannel(
-      'community-chat',
+      'botplayground',
       'Light pollution detected. Aqi is: ' + aqi,
       params
     );
@@ -116,7 +117,7 @@ function handleAqi(aqi) {
       icon_emoji: ':cat:'
     };
     bot.postMessageToChannel(
-      'community-chat',
+      'botplayground',
       'Moderate pollution detected. Mask recommended. Aqi is: ' + aqi,
       params
     );
@@ -125,7 +126,7 @@ function handleAqi(aqi) {
       icon_emoji: ':crying_cat_face:'
     };
     bot.postMessageToChannel(
-      'community-chat',
+      'botplayground',
       'High levels of pollution detected. Mask or staying indoors recommeneded. Aqi is currently: ' +
         aqi,
       params
@@ -135,7 +136,7 @@ function handleAqi(aqi) {
       icon_emoji: ':pouting_cat:'
     };
     bot.postMessageToChannel(
-      'community-chat',
+      'botplayground',
       'Dangerous levels of pollution detected. Staying indoors recommeneded. Aqi is currently: ' +
         aqi,
       params
@@ -160,7 +161,7 @@ function getData(city) {
           icon_emoji: ':question:'
         };
         bot.postMessageToChannel(
-          'community-chat',
+          'botplayground',
           'City not found [4oo]',
           params
         );
@@ -171,7 +172,7 @@ function getData(city) {
           icon_emoji: ':question:'
         };
         bot.postMessageToChannel(
-          'community-chat',
+          'botplayground',
           "Couldn't find data on that city [4o4]",
           params
         );
