@@ -4,7 +4,8 @@
   "description": "A Slackbot that fetches pollution levels of a city",
   "main": "index.js",
   "scripts": {
-    "start": "source config/app-env && node index.js"
+    "start": "source config/app-env && node index.js",
+    "dev": "source config/app-env && nodemon index.js"
   },
   "keywords": [
     "Slackbot",
