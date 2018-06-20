@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-let user_input = 'dahsdkjsa dnsakjdaskn';
+let user_input = 'seoul';
 checkCityValidity(user_input);
 function checkCityValidity(city) {
   axios
@@ -30,17 +30,20 @@ function getCoords(city) {
     .catch(err => console.log(err));
 }
 
+//Rs67sGwyS8WXBM6px
+//http://api.airvisual.com/v2/nearest_city?lat={{LATITUDE}}&lon={{LONGITUDE}}&key={{YOUR_API_KEY}}
+
 function getAqi(coordinates) {
   axios
     .get(
-      `https://api.waqi.info/feed/geo:${coordinates[1]};${
+      `http://api.airvisual.com/v2/nearest_city?lat=${coordinates[1]}&lon=${
         coordinates[0]
-      }/?token=${process.env.apiToken}`
+      }&key=${process.env.betterApiToken}`
     )
     .then(res => {
-      if (res.status == 'nug' || res.data == null) {
-        return;
-      }
-      console.log(res);
+      // if (res.status == 'nug' || res.data == null) {
+      //   return;
+      // }
+      console.log(res.data.data.current.pollution.aqius);
     });
 }

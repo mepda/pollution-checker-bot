@@ -76,9 +76,11 @@ bot.on('start', () => {
 
   bot.postMessageToChannel(
     channel,
-    `Pollutionbot is operational! 
-    Type @pollutionbot city
-    Find out more @pollutionbot help`,
+    `
+Pollutionbot is operational! 
+Type @pollutionbot city
+Find out more @pollutionbot help
+`,
     params
   );
 });
@@ -198,27 +200,37 @@ function getCoords(city) {
 function getAqi(coordinates) {
   axios
     .get(
-      `https://api.waqi.info/feed/geo:${coordinates[1]};${
+      `http://api.airvisual.com/v2/nearest_city?lat=${coordinates[1]}&lon=${
         coordinates[0]
-      }/?token=${process.env.apiToken}`
+      }&key=${process.env.betterApiToken}`
     )
     .then(res => {
-      console.log(res.data.status);
-      console.log('res.data.status is..', res.data.status);
-
-      if (res.data.status == 'nug' || res.data.data == null) {
-        console.log('res.status returned null or nug');
-        cityNotFound();
-        return;
-      } else {
-        console.log(res.data);
-        handleAqi(res.data.data.aqi);
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      cityNotFound();
+      console.log(res.data.data.current.pollution.aqius);
+      handleAqi(res.data.data.current.pollution.aqius);
     });
+  // axios
+  //   .get(
+  //     `https://api.waqi.info/feed/geo:${coordinates[1]};${
+  //       coordinates[0]
+  //     }/?token=${process.env.apiToken}`
+  //   )
+  //   .then(res => {
+  //     console.log(res.data.status);
+  //     console.log('res.data.status is..', res.data.status);
+
+  //     if (res.data.status == 'nug' || res.data.data == null) {
+  //       console.log('res.status returned null or nug');
+  //       cityNotFound();
+  //       return;
+  //     } else {
+  //       console.log(res.data);
+  //       handleAqi(res.data.data.aqi);
+  //     }
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     cityNotFound();
+  //   });
 }
 
 function cityNotFound() {
