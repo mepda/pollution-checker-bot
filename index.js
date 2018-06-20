@@ -76,7 +76,8 @@ bot.on('start', () => {
 
   bot.postMessageToChannel(
     channel,
-    'Check the pollution level of a city with @pollutionbot city',
+    `Pollutionbot is operational! Check the pollution level of a city with @pollutionbot city
+    Find out more with @pollutionbot help`,
     params
   );
 });
@@ -141,7 +142,8 @@ function handleMessage(data) {
     bot.postMessageToChannel(
       channel,
       `You can find pollution levels of various cities by typing @pollutionbot cityname (i.e. @pollutionbot worcester)
-Note that I might take some time occasionally if there are many requests`,
+Pollution bot v0.2, uses public API services, so if an obvious
+city isn't coming up it could be due to ratelimit settings.`,
       params
     );
     return;
@@ -213,67 +215,9 @@ function getAqi(coordinates) {
     });
 }
 
-//first aqi api
-///feed/geo::lat;:lng/?token=:token
-
-//http://api.airvisual.com/v2/nearest_station?lat={{LATITUDE}}&lon={{LONGITUDE}}&key={{YOUR_API_KEY}}
-
-//https://api.opencagedata.com/geocode/v1/geojson?q=venice%20italy&key=d0bff37a728b46939cf3b8c5e818955c
-
-//ex https://api.opencagedata.com/geocode/v1/geojson?q=venice%20italy&key={geocodingToken}
-
 function cityNotFound() {
   const params = {
     icon_emoji: ':question:'
   };
   bot.postMessageToChannel(channel, 'City not found [4oo]', params);
 }
-
-// function getBetterDataOne(city) {
-//   axios
-//     .get(
-//       `https://api.opencagedata.com/geocode/v1/geojson?q=${city}&key=${
-//         process.env.geocodingToken
-//       }`
-//     )
-//     ///feed/geo::lat;:lng/?token=:token
-//     .then(geodata => {
-//       console.log(
-//         'Is the geodata.features.length equal to 0? ' +
-//           geodata.data.features.length ==
-//           0
-//       );
-//       if (geodata.data.features.length == 0) {
-//         cityNotFound();
-//         return null;
-//       } else {
-//         console.log(geodata.data.features[0].geometry.coordinates);
-//         return geodata.data.features[0].geometry.coordinates;
-//       }
-//     })
-//     .then(coordinates => {
-//       return axios.get(
-//         `https://api.waqi.info/feed/geo:${coordinates[1]};${
-//           coordinates[0]
-//         }/?token=${process.env.apiToken}`
-//       );
-//     })
-//     .then(results => {
-//       console.log(results);
-//       if (results.data) {
-//         console.log(results.data.data);
-//         if (results.data.data.aqi == 'null' || results.data.status == 'nug') {
-//           console.log('null results!');
-//           return;
-//         } else if (results.data.length > 1) {
-//           console.log('more than one option for AQI responses');
-//           handleAqi(results.data[0].data.aqi);
-//         }
-//         handleAqi(results.data.data.aqi);
-//       }
-//     })
-//     // .then(data => {
-//     //   console.log(data);
-//     // })
-//     .catch(err => console.error(err));
-// }
