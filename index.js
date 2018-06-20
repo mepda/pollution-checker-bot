@@ -1,6 +1,6 @@
 const SlackBot = require('slackbots');
 const axios = require('axios');
-const channel = 'botplayground';
+const channel = 'community-chat';
 
 const bot = new SlackBot({
   token: process.env.botToken,
@@ -76,8 +76,9 @@ bot.on('start', () => {
 
   bot.postMessageToChannel(
     channel,
-    `Pollutionbot is operational! Check the pollution level of a city with @pollutionbot city
-    Find out more with @pollutionbot help`,
+    `Pollutionbot is operational! 
+    Type @pollutionbot city
+    Find out more @pollutionbot help`,
     params
   );
 });
@@ -142,8 +143,9 @@ function handleMessage(data) {
     bot.postMessageToChannel(
       channel,
       `You can find pollution levels of various cities by typing @pollutionbot cityname (i.e. @pollutionbot worcester)
-Pollution bot v0.2, uses public API services, so if an obvious
-city isn't coming up it could be due to ratelimit settings.`,
+
+Pollution bot v0.2, uses public API services, so if a large
+city is coming up as 4oo it could be due to ratelimit settings.`,
       params
     );
     return;
@@ -163,7 +165,9 @@ city isn't coming up it could be due to ratelimit settings.`,
 function checkCityValidity(city) {
   axios
     .get(
-      `https://api.apixu.com/v1/current.json?key=6ba458338eb54203a9381751182006&q=${city}`
+      `https://api.apixu.com/v1/current.json?key=${
+        process.env.cityToken
+      }&q=${city}`
     )
     .then(res => {
       console.log('got a response');
@@ -178,7 +182,9 @@ function checkCityValidity(city) {
 function getCoords(city) {
   axios
     .get(
-      `https://api.opencagedata.com/geocode/v1/geojson?q=${city}&key=d0bff37a728b46939cf3b8c5e818955c`
+      `https://api.opencagedata.com/geocode/v1/geojson?q=${city}&key=${
+        process.env.geocodingToken
+      }`
     )
     .then(geodata => {
       console.log(
