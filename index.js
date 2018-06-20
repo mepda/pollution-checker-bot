@@ -152,7 +152,7 @@ Note that I might take some time occasionally if there are many requests`,
     if (initialData.length == 1) {
       city = initialData[1];
     } else {
-      city += initialData[i] + '+';
+      city += initialData[i] + ' ';
     }
   }
   checkCityValidity(city);
@@ -168,6 +168,7 @@ function checkCityValidity(city) {
       getCoords(city);
     })
     .catch(err => {
+      cityNotFound();
       console.log('there was an error');
     });
 }
@@ -194,8 +195,21 @@ function getAqi(coordinates) {
       }/?token=${process.env.apiToken}`
     )
     .then(res => {
-      console.log(res.data);
-      handleAqi(res.data.data.aqi);
+      console.log(res.data.status);
+      console.log('res.data.status is..', res.data.status);
+
+      if (res.data.status == 'nug' || res.data.data == null) {
+        console.log('res.status returned null or nug');
+        cityNotFound();
+        return;
+      } else {
+        console.log(res.data);
+        handleAqi(res.data.data.aqi);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      cityNotFound();
     });
 }
 

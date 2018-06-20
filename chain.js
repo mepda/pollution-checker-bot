@@ -38,6 +38,9 @@ function getAqi(coordinates) {
       }/?token=${process.env.apiToken}`
     )
     .then(res => {
+      if (res.status == 'nug' || res.data == null) {
+        return;
+      }
       console.log(res);
     });
 }
