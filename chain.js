@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-let user_input = 'seoul';
+let user_input = 'san francisco';
 checkCityValidity(user_input);
 function checkCityValidity(city) {
   axios
@@ -31,7 +31,7 @@ function getCoords(city) {
 }
 
 //Rs67sGwyS8WXBM6px
-//http://api.airvisual.com/v2/nearest_city?lat={{LATITUDE}}&lon={{LONGITUDE}}&key={{YOUR_API_KEY}}
+//http://api.airvisual.com/v2/nearest_city?lat=-33.928992&lon=18.417396&key=Rs67sGwyS8WXBM6px
 
 function getAqi(coordinates) {
   axios
@@ -41,9 +41,12 @@ function getAqi(coordinates) {
       }&key=${process.env.betterApiToken}`
     )
     .then(res => {
-      // if (res.status == 'nug' || res.data == null) {
-      //   return;
-      // }
+      console.log(res.data.status);
+      if (res.data.status == 'fail') {
+        console.log("couldn't find that city");
+        return;
+      }
       console.log(res.data.data.current.pollution.aqius);
-    });
+    })
+    .catch(err => console.log('couldnt find city'));
 }

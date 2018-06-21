@@ -1,6 +1,6 @@
 const SlackBot = require('slackbots');
 const axios = require('axios');
-const channel = 'community-chat';
+const channel = 'botplayground';
 
 const bot = new SlackBot({
   token: process.env.botToken,
@@ -176,7 +176,8 @@ function checkCityValidity(city) {
       getCoords(city);
     })
     .catch(err => {
-      cityNotFound();
+      let error = { error: "Couldn't get coordinates for that location" };
+      cityNotFound(error);
       console.log('there was an error');
     });
 }
@@ -207,6 +208,14 @@ function getAqi(coordinates) {
     .then(res => {
       console.log(res.data.data.current.pollution.aqius);
       handleAqi(res.data.data.current.pollution.aqius);
+    })
+    .catch(err => {
+      console.log('couldnt find city');
+      let error = {
+        error:
+          "AQI couldn't be found by this location at this time. Possible ratelimit was exceeded."
+      };
+      cityNotFound(error);
     });
   // axios
   //   .get(
@@ -233,9 +242,13 @@ function getAqi(coordinates) {
   //   });
 }
 
-function cityNotFound() {
+function cityNotFound(err) {
   const params = {
     icon_emoji: ':question:'
   };
-  bot.postMessageToChannel(channel, 'City not found [4oo]', params);
+  bot.postMessageToChannel(
+    channel,
+    `City not found [4oo] ${err.error}`,
+    params
+  );
 }
