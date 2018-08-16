@@ -102,7 +102,7 @@ bot.on('error', error => {
 //message handler
 //debugged, checked that the data.bot_id doesn't cause the bot to infinitely call itself
 bot.on('message', data => {
-  // console.log(data);
+  console.log(data);
   if (data.bot_id == 'BB9VDK7B6' || data.username == 'pollutionbot') {
     // console.log('bots speaking');
     return;
