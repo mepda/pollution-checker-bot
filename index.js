@@ -1,6 +1,6 @@
 const SlackBot = require('slackbots');
 const axios = require('axios');
-const channel = '__general';
+const channel = 'bottest';
 
 const bot = new SlackBot({
   token: process.env.botToken,
