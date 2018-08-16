@@ -1,72 +1,11 @@
 const SlackBot = require('slackbots');
 const axios = require('axios');
-const channel = 'bottest';
+const channel = '__general';
 
 const bot = new SlackBot({
   token: process.env.botToken,
   name: 'pollutionbot'
 });
-
-//Handle AQI
-function handleAqi(aqi) {
-  if (aqi < 0 || aqi === '') {
-    const params = {
-      icon_emoji: ':question:'
-    };
-    bot.postMessageToChannel(
-      channel,
-      "I think there was a mistake. Couldn't find anything about " + city,
-      params
-    );
-  } else if (aqi < 40) {
-    const params = {
-      icon_emoji: ':smile_cat:'
-    };
-    bot.postMessageToChannel(
-      channel,
-      'Easy breathing, the aqi is: ' + aqi,
-      params
-    );
-  } else if (aqi < 80) {
-    const params = {
-      icon_emoji: ':smiley_cat:'
-    };
-    bot.postMessageToChannel(
-      channel,
-      'Light pollution detected. Aqi is: ' + aqi,
-      params
-    );
-  } else if (aqi < 120) {
-    const params = {
-      icon_emoji: ':cat:'
-    };
-    bot.postMessageToChannel(
-      channel,
-      'Moderate pollution detected. Mask recommended. Aqi is: ' + aqi,
-      params
-    );
-  } else if (aqi < 180) {
-    const params = {
-      icon_emoji: ':crying_cat_face:'
-    };
-    bot.postMessageToChannel(
-      channel,
-      'High levels of pollution detected. Mask or staying indoors recommeneded. Aqi is currently: ' +
-        aqi,
-      params
-    );
-  } else if (aqi < 250) {
-    const params = {
-      icon_emoji: ':pouting_cat:'
-    };
-    bot.postMessageToChannel(
-      channel,
-      'Dangerous levels of pollution detected. Staying indoors recommeneded. Aqi is currently: ' +
-        aqi,
-      params
-    );
-  }
-}
 
 //start handler
 bot.on('start', () => {
@@ -110,7 +49,7 @@ bot.on('message', data => {
   if (data.text) {
     let botName;
     console.log(data.text.split(' '));
-    if (data.text.split(' ')[0] != '<@UBAATMK4M>') {
+    if (data.text.split(' ')[0] != '<@UC9DUCLF6>') {
       console.log("doesn't contain @pollutionbot");
       return;
     }
@@ -217,6 +156,67 @@ function getAqi(coordinates) {
       };
       cityNotFound(error);
     });
+
+  //Handle AQI
+  function handleAqi(aqi) {
+    if (aqi < 0 || aqi === '') {
+      const params = {
+        icon_emoji: ':question:'
+      };
+      bot.postMessageToChannel(
+        channel,
+        "I think there was a mistake. Couldn't find anything about " + city,
+        params
+      );
+    } else if (aqi < 40) {
+      const params = {
+        icon_emoji: ':smile_cat:'
+      };
+      bot.postMessageToChannel(
+        channel,
+        'Easy breathing, the aqi is: ' + aqi,
+        params
+      );
+    } else if (aqi < 80) {
+      const params = {
+        icon_emoji: ':smiley_cat:'
+      };
+      bot.postMessageToChannel(
+        channel,
+        'Light pollution detected. Aqi is: ' + aqi,
+        params
+      );
+    } else if (aqi < 120) {
+      const params = {
+        icon_emoji: ':cat:'
+      };
+      bot.postMessageToChannel(
+        channel,
+        'Moderate pollution detected. Mask recommended. Aqi is: ' + aqi,
+        params
+      );
+    } else if (aqi < 180) {
+      const params = {
+        icon_emoji: ':crying_cat_face:'
+      };
+      bot.postMessageToChannel(
+        channel,
+        'High levels of pollution detected. Mask or staying indoors recommeneded. Aqi is currently: ' +
+          aqi,
+        params
+      );
+    } else if (aqi < 250) {
+      const params = {
+        icon_emoji: ':pouting_cat:'
+      };
+      bot.postMessageToChannel(
+        channel,
+        'Dangerous levels of pollution detected. Staying indoors recommeneded. Aqi is currently: ' +
+          aqi,
+        params
+      );
+    }
+  }
   // axios
   //   .get(
   //     `https://api.waqi.info/feed/geo:${coordinates[1]};${
