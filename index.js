@@ -1,13 +1,12 @@
 const SlackBot = require('slackbots');
 const axios = require('axios');
-const channel = '__general';
+const channel = 'bottest';
 
 const bot = new SlackBot({
   token: process.env.botToken,
   name: 'pollutionbot'
 });
 
-//start handler
 bot.on('start', () => {
   const params = {
     icon_emoji: ':earth_americas:'
@@ -19,30 +18,26 @@ bot.on('start', () => {
 Pollutionbot is operational! 
 Type @pollutionbot city
 Find out more @pollutionbot help
-`,
+    `,
     params
   );
 });
 
-//close handler
 bot.on('close', () => {
   const params = {
     icon_emoji: ':zzz:'
   };
-
   bot.postMessageToChannel(channel, 'Pollutionbot is going offline', params);
 });
 
-//error handler
 bot.on('error', error => {
   console.log(error);
 });
 
-//message handler
-//debugged, checked that the data.bot_id doesn't cause the bot to infinitely call itself
+// checks that the data.bot_id doesn't cause the bot to infinitely call itself
 bot.on('message', data => {
   console.log(data);
-  if (data.bot_id == 'BB9VDK7B6' || data.username == 'pollutionbot') {
+  if (data.bot_id == 'BCAMT6J5D' || data.username == 'pollutionbot') {
     // console.log('bots speaking');
     return;
   }
@@ -68,7 +63,7 @@ bot.on('message', data => {
     });
   }
   //make sure we're getting a message and it's not from our bot
-  if (data.type !== 'message' || data.bot_id == 'BB9VDK7B6') {
+  if (data.type !== 'message' || data.bot_id == 'BCAMT6J5D') {
     return;
   } else {
     handleMessage(data.text);
@@ -85,8 +80,8 @@ function handleMessage(data) {
       channel,
       `You can find pollution levels of various cities by typing @pollutionbot cityname (i.e. @pollutionbot worcester)
 
-Pollution bot v0.2, uses public API services, so if a large
-city is coming up as 4oo it could be due to ratelimit settings.`,
+      Pollution bot v0.2, uses public API services, so if a large
+      city is coming up as 4oo it could be due to ratelimit settings.`,
       params
     );
     return;
@@ -100,8 +95,11 @@ city is coming up as 4oo it could be due to ratelimit settings.`,
       city += initialData[i] + ' ';
     }
   }
-  checkCityValidity(city);
+  checkCityValidity(city.toLowerCase());
 }
+
+//Calls an API that has weather data for cities around the world to make
+//sure the city is from a valid list
 
 function checkCityValidity(city) {
   axios
@@ -111,7 +109,11 @@ function checkCityValidity(city) {
       }&q=${city}`
     )
     .then(res => {
-      console.log('got a response');
+      // console.log('got a response');
+      const params = {
+        icon_emoji: ':tada:'
+      };
+      bot.postMessageToChannel(channel, `City valid! Geocaching...`, params);
       getCoords(city);
     })
     .catch(err => {
@@ -129,8 +131,13 @@ function getCoords(city) {
       }`
     )
     .then(geodata => {
-      console.log(
-        `Coordinates are ${geodata.data.features[0].geometry.coordinates}`
+      const params = {
+        icon_emoji: ':globe_with_meridians:'
+      };
+      bot.postMessageToChannel(
+        channel,
+        `Found coordinates: ${geodata.data.features[0].geometry.coordinates}`,
+        params
       );
       getAqi(geodata.data.features[0].geometry.coordinates);
     })
@@ -145,7 +152,7 @@ function getAqi(coordinates) {
       }&key=${process.env.betterApiToken}`
     )
     .then(res => {
-      console.log(res.data.data.current.pollution.aqius);
+      // console.log(res.data.data.current.pollution.aqius);
       handleAqi(res.data.data.current.pollution.aqius);
     })
     .catch(err => {
@@ -157,7 +164,6 @@ function getAqi(coordinates) {
       cityNotFound(error);
     });
 
-  //Handle AQI
   function handleAqi(aqi) {
     if (aqi < 0 || aqi === '') {
       const params = {
@@ -217,29 +223,6 @@ function getAqi(coordinates) {
       );
     }
   }
-  // axios
-  //   .get(
-  //     `https://api.waqi.info/feed/geo:${coordinates[1]};${
-  //       coordinates[0]
-  //     }/?token=${process.env.apiToken}`
-  //   )
-  //   .then(res => {
-  //     console.log(res.data.status);
-  //     console.log('res.data.status is..', res.data.status);
-
-  //     if (res.data.status == 'nug' || res.data.data == null) {
-  //       console.log('res.status returned null or nug');
-  //       cityNotFound();
-  //       return;
-  //     } else {
-  //       console.log(res.data);
-  //       handleAqi(res.data.data.aqi);
-  //     }
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     cityNotFound();
-  //   });
 }
 
 function cityNotFound(err) {
